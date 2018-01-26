@@ -12,33 +12,33 @@ require_relative 'shortbus'
 
 # Remote control plugin
 class RemoteShortBus < ShortBus
-	def initialize()
-		super
-		@passphrase = "Put something here, because if you don't, it won't work correctly."
-		@commandregex = Regexp.new(":#{@passphrase}\s+(.*)")
-		@execregex = /^exec/i
-		hook_server('PRIVMSG', XCHAT_PRI_NORM, method(:process_message))
-	end
+  def initialize()
+    super
+    @passphrase = "Put something here, because if you don't, it won't work correctly."
+    @commandregex = Regexp.new(":#{@passphrase}\s+(.*)")
+    @execregex = /^exec/i
+    hook_server('PRIVMSG', XCHAT_PRI_NORM, method(:process_message))
+  end
 
-	# Processes an incoming server message
-	# * words[0] -> ':' + user that sent the text
-	# * words[1] -> PRIVMSG
-	# * words[2] -> channel
-	# * words[3..(words.size-1)] -> ':' + text
-	# * words_eol is the joining of each array of words[i..words.size] 
-	# * (e.g. ["all the words", "the words", "words"]
-	def process_message(words, words_eol, data)
-		if(3 < words_eol.size && (match = @commandregex.match(words_eol[3])))
-			if(!@execregex.match(match[1]))
-				command(match[1])
-			end
-		end
+  # Processes an incoming server message
+  # * words[0] -> ':' + user that sent the text
+  # * words[1] -> PRIVMSG
+  # * words[2] -> channel
+  # * words[3..(words.size-1)] -> ':' + text
+  # * words_eol is the joining of each array of words[i..words.size] 
+  # * (e.g. ["all the words", "the words", "words"]
+  def process_message(words, words_eol, data)
+    if(3 < words_eol.size && (match = @commandregex.match(words_eol[3])))
+      if(!@execregex.match(match[1]))
+        command(match[1])
+      end
+    end
 
-		return XCHAT_EAT_NONE
-	end
+    return XCHAT_EAT_NONE
+  end
 end # RemoteShortBus
 
 if(__FILE__ == $0)
-	blah = RemoteShortBus.new()
-	blah.run()
+  blah = RemoteShortBus.new()
+  blah.run()
 end
