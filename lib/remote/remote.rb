@@ -7,14 +7,14 @@
 # General Public License for more details.
 
 require 'shortbus'
+require_relative 'credentials'
 
 # Remote control plugin
 module Remote
   class RemoteShortBus < ShortBus::ShortBus
     def initialize()
       super
-      @passphrase = "Put something here, because if you don't, it won't work correctly."
-      @commandregex = Regexp.new(":#{@passphrase}\s+(.*)")
+      @commandregex = Regexp.new(":#{PASSPHRASE}\s+(.*)")
       @execregex = /^exec/i
       hook_server('PRIVMSG', ShortBus::XCHAT_PRI_NORM, method(:process_message))
     end
